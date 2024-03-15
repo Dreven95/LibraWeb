@@ -55,15 +55,15 @@ public class BookController {
     }
 
     @PostMapping("/new")
-    public String createBook(@ModelAttribute("book") @Valid Book book, @RequestParam("imageFile") MultipartFile imageFile, BindingResult bindingResult) {
+    public String createBook(@ModelAttribute("book") @Valid Book book, @RequestParam("imageData") MultipartFile imageData, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "books/new";
-        bookService.save(book, imageFile);
+        bookService.save(book, imageData);
         return "redirect:/books";
     }
 
     @GetMapping("/{id}")
-    public String showBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
+    public String showBook(@PathVariable("id") int id, Model model, @RequestParam("person") Person person) {
         model.addAttribute("book", bookService.findById(id));
 
         Person owner = bookService.findByBookOwner(id);
@@ -91,29 +91,17 @@ public class BookController {
 //        return "redirect:/books";
 //    }
 
-    @PostMapping("/{id}/edit")
-    public String editBook(@PathVariable Long id, @ModelAttribute("book") Book book,
-                           @RequestParam("imageData") byte[] imageData) {
-        // Здесь вы можете обработать изображение, сохранить его, и обновить книгу в базе данных
-        // imageData - это объект MultipartFile, представляющий загруженное изображение
-
-        // Ваш код обработки изображения и обновления книги
-
-        return "redirect:/books/{id}"; // перенаправление на страницу с отредактированной книгой
+    @GetMapping("/{id}/edit")
+    public String editBook(@PathVariable("id") int id, Model model) {
+        model.addAttribute("book", bookService.findById(id));
+        return "books/edit";
     }
 
     @PatchMapping("/{id}/edit")
     public String changeBook(@PathVariable("id") int id, @ModelAttribute("book") @Valid Book book,
-                             BindingResult bindingResult, @RequestParam("image") byte[] imageFile) {
-        if (bindingResult.hasErrors()) {
+                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
             return "books/edit";
-        }
-
-        // Загрузка изображения
-        if (imageFile != null && imageFile.length > 0) {
-            book.setImageData(imageFile);
-        }
-
         bookService.change(id, book);
         return "redirect:/books";
     }

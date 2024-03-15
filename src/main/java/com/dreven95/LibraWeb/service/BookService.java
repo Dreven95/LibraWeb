@@ -34,10 +34,6 @@ public class BookService {
         return bookRepository.findAll(nextPage);
     }
 
-//    public void save(Book book) {
-//        bookRepository.save(book);
-//    }
-
     public void save(Book book, MultipartFile imageFile) {
         try {
             if (imageFile != null && !imageFile.isEmpty()) {
@@ -45,10 +41,21 @@ public class BookService {
             }
             bookRepository.save(book);
         } catch (IOException e) {
-            // Обработайте исключение соответствующим образом (например, залогируйте или бросьте пользовательское исключение)
             e.printStackTrace();
         }
     }
+
+//    public void save(Book book, MultipartFile imageFile) {
+//        try {
+//            if (imageFile != null && !imageFile.isEmpty()) {
+//                book.setImageData(imageFile.getBytes());
+//            }
+//            bookRepository.save(book);
+//        } catch (IOException e) {
+//            // Обработайте исключение соответствующим образом (например, залогируйте или бросьте пользовательское исключение)
+//            e.printStackTrace();
+//        }
+//    }
 
     public Book findById(int id) {
         return bookRepository.findById(id).orElse(null);

@@ -36,7 +36,6 @@ public class Book {
     @Transient
     private boolean overdue;
 
-    @Lob
     @Column(name = "image_data")
     private byte[] imageData;
 
