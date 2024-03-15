@@ -1,0 +1,94 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--    <link rel="stylesheet" th:href="@{/style.css}">-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Страница со списком всех людей</h1>-->
+<!--<div>-->
+<!--    <label>Отсортировать по: </label>-->
+<!--    <a th:href="@{'/people?offset=' + ${numberPage} + '&size=' + ${sizePage} +-->
+<!--     '$sortField=fullName&sortDir=' + ${reverse}}">ФИО</a>-->
+<!--    <a th:href="@{'/people?offset=' + ${numberPage} + '&size=' + ${sizePage} +-->
+<!--     '$sortField=yearOfBirth &sortDir=' + ${reverse}}">Дате рождения</a>-->
+<!--</div>-->
+<!--<div th:each="person : ${peopleList}">-->
+<!--    <a th:href="@{/people/{id}(id=${person.getId()})}"-->
+<!--       th:text="${person.getFullName() + ', ' + person.getYearOfBirth()}"></a>-->
+<!--</div>-->
+<!--<br/>-->
+<!--<div th:if="${totalPage > 0}">-->
+<!--    <div class="pagination">-->
+<!--        <label>Выберите количество человек отображаемых на странице </label>-->
+<!--        <div th:each="size : ${sizingOrder}">-->
+<!--            <a th:class="${size == sizePage} ? active"-->
+<!--               th:href="@{'/people?offset=' + ${numberPage} + '&limit=' + ${size}}"-->
+<!--               th:text="${size}"></a>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div class="pagination">-->
+<!--        <p>Выберите страницу </p>-->
+<!--        <p th:each="number : ${numberingOrder}">-->
+<!--            <a th:class="${number == numberPage} ? active"-->
+<!--               th:href="@{'/people?offset=' + ${number} + '&limit=' + ${sizePage}}"-->
+<!--               th:text="${number + 1}"> </a></p>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<div>-->
+<!--    <a th:href="@{/people/new}">Добавить человека</a>-->
+<!--</div>-->
+<!--<div>-->
+<!--    <a th:href="@{/books}">Перейти на страницу книг</a>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница со списком всех людей</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<h1>Страница со списком всех людей</h1>
+<div>
+    <label>Отсортировать по: </label>
+    <a th:href="@{'/people?offset=' + ${numberPage} + '&size=' + ${sizePage} +
+     '&sortField=fullName&sortDir=' + ${reverse}}">ФИО</a>
+    <a th:href="@{'/people?offset=' + ${numberPage} + '&size=' + ${sizePage} +
+     '&sortField=yearOfBirth&sortDir=' + ${reverse}}">Дате рождения</a>
+</div>
+<div th:each="person : ${peopleList}">
+    <a th:href="@{/people/{id}(id=${person.id})}"
+       th:text="${person.fullName + ', ' + person.yearOfBirth}"></a>
+</div>
+<br/>
+<div th:if="${totalPage > 0}">
+    <div class="pagination">
+        <label>Выберите количество человек отображаемых на странице </label>
+        <div th:each="size : ${sizingOrder}">
+            <a th:class="${size == sizePage} ? active"
+               th:href="@{'/people?offset=' + ${numberPage} + '&limit=' + ${size} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+               th:text="${size}"></a>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <p>Выберите страницу </p>
+        <p th:each="number : ${numberingOrder}">
+            <a th:class="${number == numberPage} ? active"
+               th:href="@{'/people?offset=' + ${number} + '&limit=' + ${sizePage} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+               th:text="${number + 1}"> </a></p>
+    </div>
+</div>
+<div>
+    <a th:href="@{/people/new}">Добавить человека</a>
+</div>
+<div>
+    <a th:href="@{/books}">Перейти на страницу книг</a>
+</div>
+</body>
+</html>

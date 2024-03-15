@@ -1,0 +1,53 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Страница добавления книги</title>-->
+<!--    <link rel="stylesheet" th:href="@{/style.css}">-->
+<!--</head>-->
+<!--<body>-->
+<!--<form th:method="POST" th:action="@{/books/new}" th:object="${book}">-->
+<!--    <label for="title">Введите название: </label>-->
+<!--    <input type="text" th:field="*{title}" id="title">-->
+<!--    <div style="color: red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>-->
+<!--    <br/>-->
+<!--    <label for="year">Введите автора: </label>-->
+<!--    <input type="text" th:field="*{author}" id="author">-->
+<!--    <div style="color: red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>-->
+<!--    <br/>-->
+<!--    <label for="year">Введите год выпуска: </label>-->
+<!--    <input type="text" th:field="*{year}" id="year">-->
+<!--    <div style="color: red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></div>-->
+<!--    <br/>-->
+<!--    <input type="submit" value="Создать!">-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница добавления книги</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<form th:method="POST" th:action="@{/books/new}" th:object="${book}" enctype="multipart/form-data">
+    <label for="title">Введите название: </label>
+    <input type="text" th:field="*{title}" id="title">
+    <div style="color: red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+    <br/>
+    <label for="author">Введите автора: </label>
+    <input type="text" th:field="*{author}" id="author">
+    <div style="color: red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+    <br/>
+    <label for="year">Введите год выпуска: </label>
+    <input type="text" th:field="*{year}" id="year">
+    <div style="color: red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}"></div>
+    <br/>
+    <label for="image">Выберите изображение: </label>
+    <input type="file" id="image" name="imageFile" accept="image/*">
+    <br/>
+    <input type="submit" value="Создать!">
+</form>
+</body>
+</html>

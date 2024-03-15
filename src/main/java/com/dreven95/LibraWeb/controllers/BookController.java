@@ -1,0 +1,149 @@
+package com.dreven95.LibraWeb.controllers;
+
+import com.dreven95.LibraWeb.models.Book;
+import com.dreven95.LibraWeb.models.Person;
+import com.dreven95.LibraWeb.service.BookService;
+import com.dreven95.LibraWeb.service.PeopleService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
+@Controller
+@RequestMapping("/books")
+public class BookController {
+
+    private final BookService bookService;
+    private final PeopleService peopleService;
+
+    @Autowired
+    public BookController(BookService bookService, PeopleService peopleService) {
+        this.bookService = bookService;
+        this.peopleService = peopleService;
+    }
+
+    @GetMapping()
+    public String getBooksPage(Model model,
+                               @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+                               @RequestParam(value = "limit", required = false, defaultValue = "10") int limit,
+                               @RequestParam(value = "sortField", required = false, defaultValue = "title") String sortField,
+                               @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir) {
+        Page<Book> books = bookService.getBooks(offset, limit, sortField, sortDir);
+        model.addAttribute("booksList", books.getContent());
+        model.addAttribute("sizePage", books.getSize());
+        model.addAttribute("numberPage", books.getNumber());
+        model.addAttribute("numberingOrder", IntStream.range(0, books.getTotalPages()).toArray());
+        model.addAttribute("totalPage", books.getTotalPages());
+        model.addAttribute("sizingOrder", Arrays.asList(5, 10, 25, 50));
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverse", sortDir.equals("asc") ? "desc" : "asc");
+        return "books/index";
+    }
+
+    @GetMapping("/new")
+    public String newBook(@ModelAttribute("book") Book book) {
+        return "books/new";
+    }
+
+    @PostMapping("/new")
+    public String createBook(@ModelAttribute("book") @Valid Book book, @RequestParam("imageFile") MultipartFile imageFile, BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "books/new";
+        bookService.save(book, imageFile);
+        return "redirect:/books";
+    }
+
+    @GetMapping("/{id}")
+    public String showBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
+        model.addAttribute("book", bookService.findById(id));
+
+        Person owner = bookService.findByBookOwner(id);
+
+        if (owner == null)
+            model.addAttribute("people", peopleService.findAll());
+        else
+            model.addAttribute("owner", owner);
+
+        return "books/show";
+    }
+
+//    @GetMapping("/{id}/edit")
+//    public String editBook(@PathVariable("id") int id, Model model) {
+//        model.addAttribute("book", bookService.findById(id));
+//        return "books/edit";
+//    }
+
+//    @PatchMapping("/{id}/edit")
+//    public String changeBook(@PathVariable("id") int id, @ModelAttribute("book") @Valid Book book,
+//                             BindingResult bindingResult) {
+//        if (bindingResult.hasErrors())
+//            return "books/edit";
+//        bookService.change(id, book);
+//        return "redirect:/books";
+//    }
+
+    @PostMapping("/{id}/edit")
+    public String editBook(@PathVariable Long id, @ModelAttribute("book") Book book,
+                           @RequestParam("imageData") byte[] imageData) {
+        // Здесь вы можете обработать изображение, сохранить его, и обновить книгу в базе данных
+        // imageData - это объект MultipartFile, представляющий загруженное изображение
+
+        // Ваш код обработки изображения и обновления книги
+
+        return "redirect:/books/{id}"; // перенаправление на страницу с отредактированной книгой
+    }
+
+    @PatchMapping("/{id}/edit")
+    public String changeBook(@PathVariable("id") int id, @ModelAttribute("book") @Valid Book book,
+                             BindingResult bindingResult, @RequestParam("image") byte[] imageFile) {
+        if (bindingResult.hasErrors()) {
+            return "books/edit";
+        }
+
+        // Загрузка изображения
+        if (imageFile != null && imageFile.length > 0) {
+            book.setImageData(imageFile);
+        }
+
+        bookService.change(id, book);
+        return "redirect:/books";
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public String deleteBook(@PathVariable("id") int id) {
+        bookService.delete(id);
+        return "redirect:/books";
+    }
+
+    @PatchMapping("/{id}/assign")
+    public String assignBooks(@PathVariable("id") int id, @ModelAttribute("person") Person person) {
+        bookService.assign(id, person);
+        return "redirect:/books/" + id;
+    }
+
+    @PatchMapping("/{id}/release")
+    public String releaseBooks(@PathVariable("id") int id) {
+        bookService.release(id);
+        return "redirect:/books/" + id;
+    }
+
+    @GetMapping("/search")
+    public String searchPage() {
+        return "books/search";
+    }
+
+    @PostMapping("/search")
+    public String makeSearch(Model model, @RequestParam("query") String query) {
+        model.addAttribute("books", bookService.searchByTitle(query));
+        return "books/search";
+    }
+}

@@ -1,0 +1,123 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--    <link rel="stylesheet" th:href="@{/style.css}">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <h1>Страница со списком всех книг</h1>-->
+<!--    <div>-->
+<!--        <label>Отсортировать по: </label>-->
+<!--        <a th:href="@{'/books?offset=0&size=' + ${sizePage} +-->
+<!--     '$sortField=title&sortDir=' + ${reverse}}">Названию книги</a>-->
+<!--        <a th:href="@{'/books?offset=0&size=' + ${sizePage} +-->
+<!--     '$sortField=year&sortDir=' + ${reverse}}">Дате публикации</a>-->
+<!--        <a th:href="@{'/books?offset=0&size=' + ${sizePage} +-->
+<!--     '$sortField=author&sortDir=' + ${reverse}}">Автору</a>-->
+<!--    </div>-->
+<!--    <br/>-->
+<!--    <form th:method="POST" th:action="@{/books/search}">-->
+<!--        <label for="query">Введите поисковый запрос</label>-->
+<!--        <input type="text" id="query" name="query"/>-->
+<!--        <br/>-->
+<!--        <input type="submit" value="Найти"/>-->
+<!--    </form>-->
+<!--    <br/>-->
+<!--    <div th:each="book : ${booksList}">-->
+<!--        <a th:href="@{/books/{id}(id=${book.getId()})}"-->
+<!--           th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}"></a>-->
+<!--    </div>-->
+<!--    <br/>-->
+<!--    <div th:if="${totalPage > 0}">-->
+<!--        <div class="pagination">-->
+<!--            <label>Выберите количество книг отображаемых на странице</label>-->
+<!--            <div th:each="size : ${sizingOrder}">-->
+<!--                <a th:class="${size == sizePage} ? active"-->
+<!--                   th:href="@{'/books/?offset=0&limit=' + ${size} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"-->
+<!--                   th:text="${size}"></a>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="pagination">-->
+<!--            <p>Выберите станицу: </p>-->
+<!--            <p th:each="number : ${numberingOrder}">-->
+<!--                <a th:class="${number == numberPage} ? active"-->
+<!--                   th:href="@{'/books/?offset=' + ${number} + '&limit=' + ${sizePage} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"-->
+<!--                   th:text="${number + 1}"></a>-->
+<!--            </p>-->
+<!--        </div>-->
+
+<!--    </div>-->
+<!--    <div>-->
+<!--        <a th:href="@{/books/new}">Добавить книгу</a>-->
+<!--    </div>-->
+<!--    <br/>-->
+<!--    <div>-->
+<!--        <a th:href="@{/people}">Перейти на страницу пользователей</a>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница со списком всех книг</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Страница со списком всех книг</h1>
+    <div>
+        <label>Отсортировать по: </label>
+        <a th:href="@{'/books?offset=0&size=' + ${sizePage} +
+     '&sortField=title&sortDir=' + ${reverse}}">Названию книги</a>
+        <a th:href="@{'/books?offset=0&size=' + ${sizePage} +
+     '&sortField=year&sortDir=' + ${reverse}}">Дате публикации</a>
+        <a th:href="@{'/books?offset=0&size=' + ${sizePage} +
+     '&sortField=author&sortDir=' + ${reverse}}">Автору</a>
+    </div>
+    <br/>
+    <form th:method="POST" th:action="@{/books/search}">
+        <label for="query">Введите поисковый запрос</label>
+        <input type="text" id="query" name="query"/>
+        <br/>
+        <input type="submit" value="Найти"/>
+    </form>
+    <br/>
+    <div th:each="book : ${booksList}">
+        <a th:href="@{'/books/' + ${book.id}}"
+           th:text="${book.title + ', ' + book.author + ', ' + book.year}"></a>
+    </div>
+    <br/>
+    <div th:if="${totalPage > 0}">
+        <div class="pagination">
+            <label>Выберите количество книг отображаемых на странице</label>
+            <div th:each="size : ${sizingOrder}">
+                <a th:class="${size == sizePage} ? 'active'"
+                   th:href="@{'/books/?offset=0&limit=' + ${size} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                   th:text="${size}"></a>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <p>Выберите страницу: </p>
+            <p th:each="number : ${numberingOrder}">
+                <a th:class="${number == numberPage} ? 'active'"
+                   th:href="@{'/books/?offset=' + ${number} + '&limit=' + ${sizePage} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"
+                   th:text="${number + 1}"></a>
+            </p>
+        </div>
+    </div>
+    <div>
+        <a th:href="@{/books/new}">Добавить книгу</a>
+    </div>
+    <br/>
+    <div>
+        <a th:href="@{/people}">Перейти на страницу пользователей</a>
+    </div>
+</div>
+</body>
+</html>
